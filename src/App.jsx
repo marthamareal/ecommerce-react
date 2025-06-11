@@ -1,0 +1,31 @@
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './components/Home'
+import Products from './components/Products'
+import OrdersList from './components/OrdersList'
+import Cart from './components/Cart'
+import Register from './components/Register'
+import Login from './components/Login'
+import OrderDetail from './components/OrderDetail'
+import ProductDetail from './components/ProductDetail'
+
+export default function App() {
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/orders" element={<OrdersList />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/orders/:orderId" element={<OrderDetail />} />
+        <Route path="/products/:productId" element={<ProductDetail />} />
+      </Routes>
+    </>
+      
+  );
+}
+
