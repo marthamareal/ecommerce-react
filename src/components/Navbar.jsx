@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // mobile menu
@@ -12,6 +12,9 @@ export default function Navbar() {
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const toggleMobileDropdown = () => setIsMobileDropdownOpen(!isMobileDropdownOpen);
+
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -32,6 +35,11 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   return (
     <nav className="bg-white shadow-md relative sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,29 +55,41 @@ export default function Navbar() {
           <div className="hidden sm:flex sm:items-center space-x-6">
             <Link to="/" className="text-gray-700 hover:text-indigo-600">Home</Link>
             <Link to="/products" className="text-gray-700 hover:text-indigo-600">Products</Link>
-            <Link to="/cart" className="text-gray-700 hover:text-indigo-600">Cart</Link>
-            <Link to="/orders" className="text-gray-700 hover:text-indigo-600">Orders</Link>
+            {token && (
+              <>
+                <Link to="/cart" className="text-gray-700 hover:text-indigo-600">Cart</Link>
+                <Link to="/orders" className="text-gray-700 hover:text-indigo-600">Orders</Link>
+              </>
+            )}
             {/* Auth Links */}
-            <Link to="/register" className="text-gray-700 hover:text-indigo-600">Register</Link>
-            <Link to="/login" className="text-gray-700 hover:text-indigo-600">Login</Link>
+            {!token && (
+              <>
+                <Link to="/register" className="text-gray-700 hover:text-indigo-600">Register</Link>
+                <Link to="/login" className="text-gray-700 hover:text-indigo-600">Login</Link>
+              </>
+            )}
 
             {/* Avatar Dropdown with Icon */}
-            <div className="relative" ref={desktopDropdownRef}>
-              <button onClick={toggleDropdown} className="focus:outline-none">
-                <UserCircleIcon className="w-10 h-10 text-indigo-500 hover:text-indigo-700" />
-              </button>
+            {token && (
+              <>
+                <div className="relative" ref={desktopDropdownRef}>
+                  <button onClick={toggleDropdown} className="focus:outline-none">
+                    <UserCircleIcon className="w-10 h-10 text-indigo-500 hover:text-indigo-700" />
+                  </button>
 
-              <div
-                className={`absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-lg z-50
+                  <div
+                    className={`absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-lg z-50
                   transform transition-all duration-200 origin-top-right
                   ${isDropdownOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
-              >
-                <ul>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</li>
-                </ul>
-              </div>
-            </div>
+                  >
+                    <ul>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                      <li onClick={handleLogout} role="button" className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</li>
+                    </ul>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Toggle Button */}
@@ -115,52 +135,65 @@ export default function Navbar() {
           >
             Products
           </Link>
-          <Link
-            to="/cart"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
-          >
-            Cart
-          </Link>
-          <Link
-            to="/orders"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
-          >
-            Orders
-          </Link>
+          {token && (
+            <>
+              <Link
+                to="/cart"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+              >
+                Cart
+              </Link>
+              <Link
+                to="/orders"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+              >
+                Orders
+              </Link>
+            </>
+          )}
           {/* Auth Links */}
-          <Link
-            to="/register"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
-          >
-            Register
-          </Link>
-          <Link
-            to="/login"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
-          >
-            Login
-          </Link>
+          {!token && (
+            <>
+              <Link
+                to="/register"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+              >
+                Register
+              </Link>
+              <Link
+                to="/login"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+              >
+                Login
+              </Link>
+            </>
+          )}
 
           {/* Mobile Avatar Dropdown with Icon */}
-          <div className="px-3 py-2 border-t border-gray-200" ref={mobileDropdownRef}>
-            <button
-              onClick={toggleMobileDropdown}
-              className="flex items-center space-x-3 focus:outline-none"
-            >
-              <UserCircleIcon className="w-10 h-10 text-indigo-500 hover:text-indigo-700" />
-            </button>
+          {token && (
+            <>
+              <div className="px-3 py-2 border-t border-gray-200" ref={mobileDropdownRef}>
+                <button
+                  onClick={toggleMobileDropdown}
+                  className="flex items-center space-x-3 focus:outline-none"
+                >
+                  <UserCircleIcon className="w-10 h-10 text-indigo-500 hover:text-indigo-700" />
+                </button>
 
-            <div
-              className={`mt-2 bg-white rounded-md shadow text-black
+                <div
+                  className={`mt-2 bg-white rounded-md shadow text-black
                 transform transition-all duration-200 origin-top-left
                 ${isMobileDropdownOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
-            >
-              <ul>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</li>
-              </ul>
-            </div>
-          </div>
+                >
+                  <ul>
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                    <li onClick={handleLogout} role="button" className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</li>
+
+                  </ul>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </nav>
