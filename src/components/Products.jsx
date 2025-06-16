@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchProducts } from '../services/ProductService';
 
 export default function Products() {
     const [products, setProducts] = useState([])
     const [error, setError] = useState("");
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const getProducts = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/products", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                    }
-                })
-                if (!res.ok) throw new Error("Failed to fetch products.");
-
-                const data = await res.json();
+                const data = await fetchProducts()
                 setProducts(data);
             }
             catch (err) {
@@ -25,7 +17,7 @@ export default function Products() {
                 setError(err.message)
             }
         }
-        fetchProducts();
+        getProducts();
     }, []);
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
