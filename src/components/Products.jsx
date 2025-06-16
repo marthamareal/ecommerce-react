@@ -1,20 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const products = [
-    { id: 1, name: 'Product One', price: '$29.99', image: '' },
-    { id: 2, name: 'Product Two', price: '$49.99', image: '' },
-    { id: 3, name: 'Product Three', price: '$19.99', image: '' },
-    { id: 4, name: 'Product Four', price: '$59.99', image: '' },
-    { id: 5, name: 'Product Five', price: '$39.99', image: '' },
-    { id: 6, name: 'Product Six', price: '$24.99', image: '' },
-    { id: 7, name: 'Product Seven', price: '$34.99', image: '' },
-    { id: 8, name: 'Product Eight', price: '$44.99', image: '' },
-    { id: 9, name: 'Product Nine', price: '$14.99', image: '' },
-    { id: 10, name: 'Product Ten', price: '$64.99', image: '' },
-];
-
 export default function Products() {
+    const [products, setProducts] = useState([])
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch("http://localhost:5000/api/products", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    }
+                })
+                if (!res.ok) throw new Error("Failed to fetch products.");
+
+                const data = await res.json();
+                setProducts(data);
+            }
+            catch (err) {
+                console.log(err)
+                setError(err.message)
+            }
+        }
+        fetchProducts();
+    }, []);
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
             {/* Search + Filter */}
