@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import PrivateRoute from './PrivateRoute';
 import Navbar from './components/Navbar';
 import Home from './components/Home'
 import Products from './components/Products'
@@ -17,12 +18,12 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<OrdersList />} />
+        <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
+        <Route path="/orders" element={<PrivateRoute><OrdersList /></PrivateRoute>} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/orders/:orderId" element={<OrderDetail />} />
-        <Route path="/products/:productId" element={<ProductDetail />} />
+        <Route path="/orders/:orderId" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
+        <Route path="/products/:productId" element={<PrivateRoute><ProductDetail /></PrivateRoute>} />
       </Routes>
     </>
       
