@@ -13,7 +13,10 @@ export default function Navbar() {
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const toggleMobileDropdown = () => setIsMobileDropdownOpen(!isMobileDropdownOpen);
 
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
+  if (token === "undefined" || token === "null") {
+    token = null;
+  }
   const navigate = useNavigate();
 
   useEffect(() => {

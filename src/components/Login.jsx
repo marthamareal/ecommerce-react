@@ -42,7 +42,7 @@ export default function Login() {
                     setErrors({ general: data.message || "Login failed" })
                 } else {
                     // Save token to localStorage
-                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("token", data.accessToken);
                     navigate("/");
                 }
 
