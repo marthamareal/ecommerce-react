@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
-
-    const product = {
-        id: 1,
-        name: 'Premium Sneakers',
-        description:
-            'Stylish and comfortable sneakers made with high-quality materials. Perfect for everyday use or a night out.',
-        price: 79.99,
-        image: ''
-    };
+    const [product, setProduct] = useState([])
+    const [error, setError] = useState("");
+    const { id } = useParams();
 
     const handleQuantityChange = (e) => {
         const value = Math.max(1, Number(e.target.value));
@@ -21,6 +16,33 @@ const ProductDetail = () => {
         // Add to cart logic here
         alert(`Added ${quantity} of "${product.name}" to cart.`);
     };
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    }
+                })
+                if (!res.ok) setError("Product Not found.");
+
+                const data = await res.json();
+                setProduct(data);
+            }
+            catch (err) {
+                console.log(err)
+                setError(err.message)
+            }
+        }
+        fetchProduct();
+    }, [id]);
+
+    if (error) {
+        return <p className="text-red-500 text-center p-4">{error}</p>;
+    }
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -39,9 +61,9 @@ const ProductDetail = () => {
                     {product.name}
                 </h2>
                 <p className="text-xl text-indigo-600 font-semibold mb-2">
-                    ${product.price.toFixed(2)}
+                    ${product?.price?.toFixed(2)}
                 </p>
-                <p className="text-gray-700 mb-6">{product.description}</p>
+                <p className="text-gray-700 mb-6 text-justify break-words">{product.description}</p>
 
                 <div className="flex items-center mb-4 gap-4">
                     <label htmlFor="quantity" className="text-gray-700">

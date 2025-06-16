@@ -22,8 +22,8 @@ export default function App() {
         <Route path="/orders" element={<PrivateRoute><OrdersList /></PrivateRoute>} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/orders/:orderId" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
-        <Route path="/products/:productId" element={<PrivateRoute><ProductDetail /></PrivateRoute>} />
+        <Route path="/orders/:id" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
+        <Route path="/products/:id" element={<PrivateRoute><ProductDetail /></PrivateRoute>} />
       </Routes>
     </>
       

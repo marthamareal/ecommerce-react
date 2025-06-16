@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchProducts } from '../services/ProductService';
 
 const slides = [
     {
@@ -22,27 +23,6 @@ const slides = [
     },
 ];
 
-const featuredProducts = [
-    {
-        id: 1,
-        name: 'Wireless Headphones',
-        price: 99.99,
-        image: '',
-    },
-    {
-        id: 2,
-        name: 'Smart Watch',
-        price: 149.99,
-        image: '',
-    },
-    {
-        id: 3,
-        name: 'Gaming Mouse',
-        price: 59.99,
-        image: '',
-    },
-];
-
 const categories = [
     { id: 1, name: 'Category 1', image: '' },
     { id: 2, name: 'Category 2', image: '' },
@@ -51,6 +31,22 @@ const categories = [
 
 export default function Home() {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [featuredProducts, setFeaturedProducts] = useState([])
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const getFeaturedProducts = async () => {
+            try {
+                const data = await fetchProducts()
+                setFeaturedProducts(data);
+            }
+            catch (err) {
+                console.log(err)
+                setError(err.message)
+            }
+        }
+        getFeaturedProducts();
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
