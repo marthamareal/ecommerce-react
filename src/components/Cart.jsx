@@ -73,19 +73,22 @@ export default function Cart() {
             ) : (
                 <>
                     <div className="space-y-6">
-                        {cartItems.map(({ id, productId, name, price, quantity, image }) => (
+                        {cartItems.map(({ id, productId, quantity, product }) => (
                             <div
                                 key={productId}
                                 className="flex flex-col sm:flex-row items-center sm:items-start border rounded-md p-4 gap-4"
                             >
                                 <img
-                                    src={image || '/src/assets/no-img.png'}
-                                    alt={name}
+                                    src={product.image || '/src/assets/no-img.png'}
+                                    alt={product.name}
                                     className="w-32 h-32 sm:w-24 sm:h-24 object-cover rounded"
                                 />
-                                <div className="flex-1 w-full sm:w-auto text-center sm:text-left">
-                                    <h2 className="text-lg font-semibold">{name}</h2>
-                                    <p className="text-indigo-600 font-semibold">${price.toFixed(2)}</p>
+                                <div className="flex-1 w-full sm:w-auto text-center sm:text-left overflow-x-hidden">
+                                    <h2 className="text-lg font-semibold">{product.name}</h2>
+                                    <p className="text-indigo-600 font-semibold">${product.price.toFixed(2)}</p>
+                                    <p className="text-gray-700 mb-6 text-justify break-words whitespace-pre-wrap">
+                                        {product.description}
+                                    </p>
                                 </div>
 
                                 <div className="flex items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0">

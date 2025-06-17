@@ -19,6 +19,24 @@ export const fetchProducts = async () => {
     }
 }
 
+export const fetchProduct = async (id) => {
+    try {
+        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            }
+        })
+        if (!res.ok) setError("Product Not found.");
+
+        return res
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 export const fetchCart = async () => {
     try {
         const res = await fetch("http://localhost:5000/api/products/cart/items", {
@@ -50,8 +68,7 @@ export const addOrUpdateCart = async (requestData) => {
             },
             body: JSON.stringify(requestData)
         })
-        if (!res.ok) throw new Error("Item added to Cart.");
-
+        if (!res.ok) throw new Error("Failed to add item to Cart.");
         const data = await res.json();
         return data
     }

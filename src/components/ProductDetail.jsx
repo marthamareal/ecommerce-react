@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { addOrUpdateCart, fetchProduct } from '../services/ProductService';
 
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
@@ -12,32 +13,36 @@ const ProductDetail = () => {
         setQuantity(value);
     };
 
-    const handleAddToCart = () => {
-        // Add to cart logic here
-        alert(`Added ${quantity} of "${product.name}" to cart.`);
+    const handleAddToCart = async () => {
+        try {
+            await addOrUpdateCart({ productId: product.id, quantity })
+            // Add to cart logic here
+            alert(`Added ${quantity} of "${product.name}" to cart.`);
+        }
+        catch (err) {
+            console.log(err)
+            setError(err.message)
+        }
     };
 
     useEffect(() => {
-        const fetchProduct = async () => {
+        const getProduct = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/products/${id}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                    }
-                })
-                if (!res.ok) setError("Product Not found.");
-
+                const res = await fetchProduct(id)
                 const data = await res.json();
-                setProduct(data);
+                if (res.status == 200) {
+                    setProduct(data)
+                }
+                else {
+                    setError(data.message)
+                }
             }
             catch (err) {
                 console.log(err)
                 setError(err.message)
             }
         }
-        fetchProduct();
+        getProduct();
     }, [id]);
 
     if (error) {

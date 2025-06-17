@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { fetchProducts } from '../services/ProductService';
+import { Link, useNavigate } from 'react-router-dom';
+import { addOrUpdateCart, fetchProducts } from '../services/ProductService';
 
 const slides = [
     {
@@ -33,6 +33,20 @@ export default function Home() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [featuredProducts, setFeaturedProducts] = useState([])
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    const addToCart = async (productId, qty = 1) => {
+        // Add to cart with API
+        try {
+            await addOrUpdateCart({ productId: productId, quantity: qty })
+            navigate("/cart")
+
+        }
+        catch (err) {
+            console.log(err)
+            setError(err.message)
+        }
+    };
 
     useEffect(() => {
         const getFeaturedProducts = async () => {
@@ -113,7 +127,7 @@ export default function Home() {
             {/* Featured Products */}
             <section className="my-12">
                 <h2 className="text-2xl font-bold mb-6 text-center">Featured Products</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     {featuredProducts.map(({ id, name, price, image }) => (
                         <Link
                             to={`/products/${id}`}
@@ -126,6 +140,32 @@ export default function Home() {
                                 <p className="text-indigo-600 font-semibold mt-1">${price.toFixed(2)}</p>
                             </div>
                         </Link>
+                        
+                    ))}
+                </div> */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                    {featuredProducts.map(({ id, name, price, image }) => (
+                        <div
+                            key={id}
+                            className="bg-white border shadow-sm rounded-lg p-4 hover:shadow-md transition flex flex-col"
+                        >
+                            <Link to={`/products/${id}`} className="flex-1">
+                                <img
+                                    src={image || '/src/assets/no-img.png'}
+                                    alt={name}
+                                    className="w-full h-32 object-cover mb-4 rounded"
+                                />
+                                <h2 className="text-lg font-semibold text-gray-800">{name}</h2>
+                                <p className="text-indigo-600 font-bold mt-1">${price}</p>
+                            </Link>
+
+                            <button
+                                onClick={() => addToCart(id)}
+                                className="mt-3 w-full bg-indigo-600 text-white py-1.5 rounded hover:bg-indigo-700 transition"
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
                     ))}
                 </div>
             </section>
