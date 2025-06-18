@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { addOrUpdateCart, fetchProducts } from '../services/ProductService';
+import { addOrUpdateCart, fetchCategories, fetchProducts } from '../services/ProductService';
 
 const slides = [
     {
@@ -23,30 +23,26 @@ const slides = [
     },
 ];
 
-const categories = [
-    { id: 1, name: 'Category 1', image: '' },
-    { id: 2, name: 'Category 2', image: '' },
-    { id: 3, name: 'Category 3', image: '' },
-];
-
 export default function Home() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [featuredProducts, setFeaturedProducts] = useState([])
+    const [categories, setCategories] = useState([])
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const addToCart = async (productId, qty = 1) => {
-        // Add to cart with API
-        try {
-            await addOrUpdateCart({ productId: productId, quantity: qty })
-            navigate("/cart")
-
+    useEffect(() => {
+        const getCategories = async () => {
+            try {
+                const data = await fetchCategories()
+                setCategories(data);
+            }
+            catch (err) {
+                console.log(err)
+                setError(err.message)
+            }
         }
-        catch (err) {
-            console.log(err)
-            setError(err.message)
-        }
-    };
+        getCategories();
+    }, []);
 
     useEffect(() => {
         const getFeaturedProducts = async () => {
@@ -72,6 +68,19 @@ export default function Home() {
 
         return () => clearInterval(interval);
     }, []);
+
+    const addToCart = async (productId, qty = 1) => {
+        // Add to cart with API
+        try {
+            await addOrUpdateCart({ productId: productId, quantity: qty })
+            navigate("/cart")
+
+        }
+        catch (err) {
+            console.log(err)
+            setError(err.message)
+        }
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -177,13 +186,12 @@ export default function Home() {
             <section className="my-12">
                 <h2 className="text-2xl font-bold mb-6 text-center">Shop by Category</h2>
                 <div className="flex justify-center gap-8 flex-wrap">
-                    {categories.map(({ id, name, image }) => (
+                    {categories.map(({ id, name }) => (
                         <Link
                             to={`/products?category=${name.toLowerCase()}`}
                             key={id}
                             className="w-40 rounded-lg overflow-hidden shadow hover:shadow-lg transition"
                         >
-                            <img src={image || '/src/assets/no-img.png'} alt={name} className="w-full h-40 object-cover" />
                             <div className="p-3 text-center font-semibold text-gray-700">{name}</div>
                         </Link>
                     ))}
