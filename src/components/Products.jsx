@@ -88,7 +88,7 @@ export default function Products() {
                                 className="w-full h-32 object-cover mb-4 rounded"
                             />
                             <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
-                            <p className="text-indigo-600 font-bold mt-1">{product.price}</p>
+                            <p className="text-indigo-600 font-bold mt-1">${product.price}</p>
                         </Link>
 
                         <button

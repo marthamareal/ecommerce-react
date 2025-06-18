@@ -11,13 +11,13 @@ const slides = [
     },
     {
         id: 2,
-        image: '/src/assets/one.png',
+        image: '/src/assets/new.jpg',
         headline: 'New Arrivals',
         description: 'Check out the latest gadgets and accessories.',
     },
     {
         id: 3,
-        image: '/src/assets/one.png',
+        image: '/src/assets/blackf.png',
         headline: 'Free Shipping',
         description: 'On all orders over $50.',
     },
@@ -52,7 +52,10 @@ export default function Home() {
         const getFeaturedProducts = async () => {
             try {
                 const data = await fetchProducts()
-                setFeaturedProducts(data);
+                // Filter featured products. NOTE: To be changed when backend implements filter on products route
+                const featuredProducts = data.filter((prod) => prod.featured == true)
+
+                setFeaturedProducts(featuredProducts);
             }
             catch (err) {
                 console.log(err)

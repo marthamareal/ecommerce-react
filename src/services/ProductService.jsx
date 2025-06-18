@@ -97,3 +97,59 @@ export const removeFromCart = async (requestData) => {
         console.log(err)
     }
 }
+
+export const createOrder = async (id) => {
+    try {
+        const res = await fetch("http://localhost:5000/api/products/orders/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: "Bearer " + token.trim(),
+            }
+        })
+        if (!res.ok) throw new Error("Failed to create Order.");
+        return res
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+export const fetchOrders = async () => {
+    try {
+        const res = await fetch("http://localhost:5000/api/products/orders/retrieve", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: "Bearer " + token.trim(),
+            }
+        })
+        if (!res.ok) throw new Error("Failed to fetch Orders.");
+
+        const data = await res.json();
+        return data
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+export const fetchOrder = async (id) => {
+    try {
+        const res = await fetch(`http://localhost:5000/api/products/orders/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: "Bearer " + token.trim(),
+            }
+        })
+        if (!res.ok) throw new Error("Failed to fetch Order.");
+        return res
+    }
+    catch (err) {
+        console.log(err)
+    }
+}

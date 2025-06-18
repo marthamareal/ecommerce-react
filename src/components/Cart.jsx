@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addOrUpdateCart, fetchCart, removeFromCart } from '../services/ProductService';
+import { addOrUpdateCart, createOrder, fetchCart, removeFromCart } from '../services/ProductService';
 
 export default function Cart() {
     const navigate = useNavigate();
@@ -57,6 +57,22 @@ export default function Cart() {
 
         // Update UI without refreshing page
         setCartItems((items) => items.filter((item) => item.productId !== productId));
+    };
+    const handleCreateOrder = async () => {
+        try {
+            const result = await createOrder();
+            const res = await result.json();
+            if (result.status != 201) {
+                setError(res.message)
+            }
+            else {
+                navigate("/orders")
+            }
+        }
+        catch (err) {
+            console.log(err)
+            setError(err.message)
+        }
     };
 
     const totalPrice = cartItems.reduce(
@@ -128,7 +144,7 @@ export default function Cart() {
                                 <button
                                     disabled={cartItems.length === 0}
                                     className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 w-full sm:w-auto"
-                                    onClick={() => navigate('/orders/1')} 
+                                    onClick={handleCreateOrder} 
                                 >
                                     Order
                                 </button>
