@@ -13,7 +13,6 @@ export default function OrderDetail() {
                 const res = await fetchOrder(id)
                 const data = await res.json();
                 if (res.status == 200) {
-                    console.log(data)
                     setOrder(data)
                 }
                 else {

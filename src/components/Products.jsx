@@ -87,9 +87,9 @@ export default function Products() {
                         onChange={(e) => {setCategory(e.target.value)}}
                         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                        <option value="">All</option>
+                        <option value="" >All</option>
                         {categories.map((category) => (
-                            <option value={ category.name}>{category.name}</option>
+                            <option value={category.name} key={category.id}>{category.name}</option>
                         ))}
                     </select>
                 </div>

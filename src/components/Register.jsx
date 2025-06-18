@@ -19,7 +19,7 @@ export default function Register() {
         else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Invalid email format';
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
         if (!password) newErrors.password = 'Password is required';
-        else if (password.length < 8) {
+        else if (password.length < 8 || !passwordRegex.test(password)) {
             newErrors.password = 'Password must be at least 6 characters and include uppercase, lowercase, number, and special character';
         }
         if (!confirmPassword) newErrors.confirmPassword = 'Please confirm your password';
