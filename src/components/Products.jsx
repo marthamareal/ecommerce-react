@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { fetchProducts } from '../services/ProductService';
+import { Link, useNavigate } from 'react-router-dom';
+import { addOrUpdateCart, fetchProducts } from '../services/ProductService';
 
 export default function Products() {
     const [products, setProducts] = useState([])
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    const addToCart = async (productId, qty = 1) => {
+        // Add to cart with API
+        try {
+            await addOrUpdateCart({ productId: productId, quantity: qty })
+            navigate("/cart")
+        }
+        catch (err) {
+            console.log(err)
+            setError(err.message)
+        }
+    };
 
     useEffect(() => {
         const getProducts = async () => {
@@ -75,10 +88,13 @@ export default function Products() {
                                 className="w-full h-32 object-cover mb-4 rounded"
                             />
                             <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
-                            <p className="text-indigo-600 font-bold mt-1">{product.price}</p>
+                            <p className="text-indigo-600 font-bold mt-1">${product.price}</p>
                         </Link>
 
-                        <button className="mt-3 w-full bg-indigo-600 text-white py-1.5 rounded hover:bg-indigo-700 transition">
+                        <button
+                            onClick={() => addToCart(product.id)}
+                            className="mt-3 w-full bg-indigo-600 text-white py-1.5 rounded hover:bg-indigo-700 transition"
+                        >
                             Add to Cart
                         </button>
                     </div>

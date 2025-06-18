@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { loginUser } from '../services/AuthService';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -27,25 +28,14 @@ export default function Login() {
             setErrors({});
             //   Submit form to api
             try {
-                const res = await fetch("http://localhost:5000/api/auth/login",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Accept: "application/json",
-                        },
-                        body: JSON.stringify({ email, password })
-                    }
-                )
-                const data = await res.json();
-                if (!res.ok) {
-                    setErrors({ general: data.message || "Login failed" })
-                } else {
+                const result = await loginUser({ email, password });
+                const res = await result.json();
+                if (!result.ok) setErrors({ general: res.message || "Login failed" })
+                else {
                     // Save token to localStorage
-                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("token", res.accessToken);
                     navigate("/");
                 }
-
             }
             catch (err) {
                 console.log(err)
@@ -87,6 +77,9 @@ export default function Login() {
                             {showPassword ? 'Hide' : 'Show'}
                         </button>
                         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                        <p className="mt-4 text-center text-sm text-gray-600">
+                            <Link to="/forgot" className="text-indigo-600 hover:underline">Forgot password?</Link>
+                        </p>
                     </div>
 
                     <button

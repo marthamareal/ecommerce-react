@@ -10,6 +10,8 @@ import Register from './components/Register'
 import Login from './components/Login'
 import OrderDetail from './components/OrderDetail'
 import ProductDetail from './components/ProductDetail'
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 export default function App() {
   return (
@@ -18,6 +20,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/reset/:token" element={<ResetPassword />} />
         <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
         <Route path="/orders" element={<PrivateRoute><OrdersList /></PrivateRoute>} />
         <Route path="/register" element={<Register />} />

@@ -1,45 +1,78 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const initialCartItems = [
-    {
-        id: 1,
-        name: 'Wireless Headphones',
-        price: 99.99,
-        quantity: 1,
-        image: '',
-    },
-    {
-        id: 2,
-        name: 'Smart Watch',
-        price: 149.99,
-        quantity: 2,
-        image: '',
-    },
-    {
-        id: 3,
-        name: 'Leather Wallet',
-        price: 39.99,
-        quantity: 1,
-        image: '',
-    },
-];
+import { addOrUpdateCart, createOrder, fetchCart, removeFromCart } from '../services/ProductService';
 
 export default function Cart() {
     const navigate = useNavigate();
-    const [cartItems, setCartItems] = useState(initialCartItems);
+    const [availableCartItems, setAvailableCartItems] = useState([])
+    const [cartItems, setCartItems] = useState([]);
+    const [error, setError] = useState("");
 
-    const updateQuantity = (id, qty) => {
+    useEffect(() => {
+        const getAvailableCartItems = async () => {
+            try {
+                const data = await fetchCart();
+                setAvailableCartItems(data.items);
+            }
+            catch (err) {
+                console.log(err)
+                setError(err.message)
+            }
+        }
+        getAvailableCartItems();
+    }, []);
+
+    useEffect(() => {
+        setCartItems(availableCartItems);
+    }, [availableCartItems]);
+
+    const updateQuantity = async (productId, qty) => {
         if (qty < 1) return;
+
+        // Update cart with API
+        try {
+            await addOrUpdateCart({ productId: productId, quantity: qty})
+        }
+        catch (err) {
+            console.log(err)
+            setError(err.message)
+        }
+        // Update UI without refreshing page
         setCartItems((items) =>
             items.map((item) =>
-                item.id === id ? { ...item, quantity: qty } : item
+                item.productId === productId ? { ...item, quantity: qty } : item
             )
         );
     };
 
-    const removeItem = (id) => {
-        setCartItems((items) => items.filter((item) => item.id !== id));
+    const removeItem = async (productId) => {
+        //  Remove item with API
+        try {
+            await removeFromCart({ productId: productId })
+        }
+        catch (err) {
+            console.log(err)
+            setError(err.message)
+        }
+
+        // Update UI without refreshing page
+        setCartItems((items) => items.filter((item) => item.productId !== productId));
+    };
+    const handleCreateOrder = async () => {
+        try {
+            const result = await createOrder();
+            const res = await result.json();
+            if (result.status != 201) {
+                setError(res.message)
+            }
+            else {
+                navigate("/orders")
+            }
+        }
+        catch (err) {
+            console.log(err)
+            setError(err.message)
+        }
     };
 
     const totalPrice = cartItems.reduce(
@@ -56,19 +89,22 @@ export default function Cart() {
             ) : (
                 <>
                     <div className="space-y-6">
-                        {cartItems.map(({ id, name, price, quantity, image }) => (
+                        {cartItems.map(({ id, productId, quantity, product }) => (
                             <div
-                                key={id}
+                                key={productId}
                                 className="flex flex-col sm:flex-row items-center sm:items-start border rounded-md p-4 gap-4"
                             >
                                 <img
-                                    src={image || '/src/assets/no-img.png'}
-                                    alt={name}
+                                    src={product.image || '/src/assets/no-img.png'}
+                                    alt={product.name}
                                     className="w-32 h-32 sm:w-24 sm:h-24 object-cover rounded"
                                 />
-                                <div className="flex-1 w-full sm:w-auto text-center sm:text-left">
-                                    <h2 className="text-lg font-semibold">{name}</h2>
-                                    <p className="text-indigo-600 font-semibold">${price.toFixed(2)}</p>
+                                <div className="flex-1 w-full sm:w-auto text-center sm:text-left overflow-x-hidden">
+                                    <h2 className="text-lg font-semibold">{product.name}</h2>
+                                    <p className="text-indigo-600 font-semibold">${product.price.toFixed(2)}</p>
+                                    <p className="text-gray-700 mb-6 text-justify break-words whitespace-pre-wrap">
+                                        {product.description}
+                                    </p>
                                 </div>
 
                                 <div className="flex items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0">
@@ -80,11 +116,11 @@ export default function Cart() {
                                         type="number"
                                         min="1"
                                         value={quantity}
-                                        onChange={(e) => updateQuantity(id, parseInt(e.target.value))}
+                                        onChange={(e) => updateQuantity(productId, parseInt(e.target.value))}
                                         className="w-full sm:w-16 border rounded-md px-2 py-1 text-center"
                                     />
                                     <button
-                                        onClick={() => removeItem(id)}
+                                        onClick={() => removeItem(productId)}
                                         className="text-red-600 hover:text-red-800 font-semibold whitespace-nowrap"
                                     >
                                         Remove
@@ -108,7 +144,7 @@ export default function Cart() {
                                 <button
                                     disabled={cartItems.length === 0}
                                     className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 w-full sm:w-auto"
-                                    onClick={() => navigate('/orders/1')} 
+                                    onClick={handleCreateOrder} 
                                 >
                                     Order
                                 </button>
