@@ -13,7 +13,6 @@ export default function OrderDetail() {
                 const res = await fetchOrder(id)
                 const data = await res.json();
                 if (res.status == 200) {
-                    console.log(data)
                     setOrder(data)
                 }
                 else {
@@ -56,10 +55,10 @@ export default function OrderDetail() {
                     <span className="font-semibold">Status:</span>{' '}
                     <span
                         className={`inline-block px-2 py-1 rounded text-white ${order.status === 'PROCESSED'
-                                ? 'bg-green-600'
-                                : order.status === 'ACCEPTED'
-                                    ? 'bg-yellow-500'
-                                    : 'bg-gray-500'
+                            ? 'bg-green-600'
+                            : order.status === 'ACCEPTED'
+                                ? 'bg-yellow-500'
+                                : 'bg-gray-500'
                             }`}
                     >
                         {order.status}
@@ -77,7 +76,7 @@ export default function OrderDetail() {
                             className="flex items-center gap-4 border-b last:border-b-0 py-3"
                         >
                             <img
-                                src={product.image || '/src/assets/no-img.png'}
+                                src={product.image || 'images/no-img.png'}
                                 alt={product.name}
                                 className="w-16 h-16 object-cover rounded"
                             />

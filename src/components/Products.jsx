@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { addOrUpdateCart, fetchProducts } from '../services/ProductService';
+import { addOrUpdateCart, fetchCategories, fetchProducts } from '../services/ProductService';
 
 export default function Products() {
     const [products, setProducts] = useState([])
+    const [category, setCategory] = useState("")
+    const [categories, setCategories] = useState([])
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -23,7 +25,11 @@ export default function Products() {
         const getProducts = async () => {
             try {
                 const data = await fetchProducts()
-                setProducts(data);
+                // Apply filtes: NOTE base them on API after filter is added
+                const filteredProducts = category
+                    ? data.filter((p) => p.category.name === category)
+                    : data;
+                setProducts(filteredProducts);
             }
             catch (err) {
                 console.log(err)
@@ -31,7 +37,22 @@ export default function Products() {
             }
         }
         getProducts();
+    }, [category]);
+
+    useEffect(() => {
+        const getCategories = async () => {
+            try {
+                const data = await fetchCategories()
+                setCategories(data);
+            }
+            catch (err) {
+                console.log(err)
+                setError(err.message)
+            }
+        }
+        getCategories();
     }, []);
+
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
             {/* Search + Filter */}
@@ -62,14 +83,14 @@ export default function Products() {
 
                     {/* Dropdown */}
                     <select
-                        value=''
-                        onChange=''
+                        value={category}
+                        onChange={(e) => { setCategory(e.target.value) }}
                         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                        <option value="All">All</option>
-                        <option value="Electronics">Category 1</option>
-                        <option value="Fashion">Category 2</option>
-                        <option value="Accessories">Cartegory 3</option>
+                        <option value="" >All</option>
+                        {categories.map((category) => (
+                            <option value={category.name} key={category.id}>{category.name}</option>
+                        ))}
                     </select>
                 </div>
             </div>
@@ -83,7 +104,7 @@ export default function Products() {
                     >
                         <Link to={`/products/${product.id}`} className="flex-1">
                             <img
-                                src={product.image || '/src/assets/no-img.png'}
+                                src={product.image || 'images/no-img.png'}
                                 alt={product.name}
                                 className="w-full h-32 object-cover mb-4 rounded"
                             />

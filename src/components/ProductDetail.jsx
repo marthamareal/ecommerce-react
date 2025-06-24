@@ -54,7 +54,7 @@ const ProductDetail = () => {
             {/* Product Image */}
             <div>
                 <img
-                    src={product.image || '/src/assets/no-img.png'}
+                    src={product.image || 'images/no-img.png'}
                     alt={product.name}
                     className="w-full h-auto object-cover rounded-lg shadow"
                 />
