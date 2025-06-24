@@ -84,7 +84,7 @@ export default function Products() {
                     {/* Dropdown */}
                     <select
                         value={category}
-                        onChange={(e) => {setCategory(e.target.value)}}
+                        onChange={(e) => { setCategory(e.target.value) }}
                         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                         <option value="" >All</option>
@@ -104,7 +104,7 @@ export default function Products() {
                     >
                         <Link to={`/products/${product.id}`} className="flex-1">
                             <img
-                                src={product.image || '/src/assets/no-img.png'}
+                                src={product.image || 'images/no-img.png'}
                                 alt={product.name}
                                 className="w-full h-32 object-cover mb-4 rounded"
                             />

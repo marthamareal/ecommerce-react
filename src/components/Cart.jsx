@@ -31,7 +31,7 @@ export default function Cart() {
 
         // Update cart with API
         try {
-            await addOrUpdateCart({ productId: productId, quantity: qty})
+            await addOrUpdateCart({ productId: productId, quantity: qty })
         }
         catch (err) {
             console.log(err)
@@ -95,7 +95,7 @@ export default function Cart() {
                                 className="flex flex-col sm:flex-row items-center sm:items-start border rounded-md p-4 gap-4"
                             >
                                 <img
-                                    src={product.image || '/src/assets/no-img.png'}
+                                    src={product.image || 'images/no-img.png'}
                                     alt={product.name}
                                     className="w-32 h-32 sm:w-24 sm:h-24 object-cover rounded"
                                 />
@@ -130,26 +130,26 @@ export default function Cart() {
                         ))}
                     </div>
 
-                        <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-                            <div className="text-xl font-semibold">Total: ${totalPrice.toFixed(2)}</div>
+                    <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="text-xl font-semibold">Total: ${totalPrice.toFixed(2)}</div>
 
-                            <div className="flex gap-4 w-full sm:w-auto">
-                                <button
-                                    onClick={() => navigate('/products')} 
-                                    className="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-md hover:bg-indigo-50 w-full sm:w-auto"
-                                >
-                                    Continue Shopping
-                                </button>
+                        <div className="flex gap-4 w-full sm:w-auto">
+                            <button
+                                onClick={() => navigate('/products')}
+                                className="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-md hover:bg-indigo-50 w-full sm:w-auto"
+                            >
+                                Continue Shopping
+                            </button>
 
-                                <button
-                                    disabled={cartItems.length === 0}
-                                    className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 w-full sm:w-auto"
-                                    onClick={handleCreateOrder} 
-                                >
-                                    Order
-                                </button>
-                            </div>
+                            <button
+                                disabled={cartItems.length === 0}
+                                className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 w-full sm:w-auto"
+                                onClick={handleCreateOrder}
+                            >
+                                Order
+                            </button>
                         </div>
+                    </div>
                 </>
             )}
         </div>
