@@ -5,19 +5,19 @@ import { addOrUpdateCart, fetchCategories, fetchProducts } from '../services/Pro
 const slides = [
     {
         id: 1,
-        image: 'images/one.png',
+        image: '/images/one.png',
         headline: 'Big Summer Sale!',
         description: 'Up to 50% off on selected items.',
     },
     {
         id: 2,
-        image: 'images/new.jpg',
+        image: '/images/new.jpg',
         headline: 'New Arrivals',
         description: 'Check out the latest gadgets and accessories.',
     },
     {
         id: 3,
-        image: 'images/blackf.png',
+        image: '/images/blackf.png',
         headline: 'Free Shipping',
         description: 'On all orders over $50.',
     },
@@ -93,7 +93,7 @@ export default function Home() {
                             }`}
                     >
                         <img
-                            src={slide.image || 'images/no-img.png'}
+                            src={slide.image || '/images/no-img.png'}
                             alt={slide.headline}
                             className="w-full h-full object-cover"
                         />
@@ -146,7 +146,7 @@ export default function Home() {
                             key={id}
                             className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition"
                         >
-                            <img src={image || 'images/no-img.png'} alt={name} className="w-full h-48 object-cover" />
+                            <img src={image || '/images/no-img.png'} alt={name} className="w-full h-48 object-cover" />
                             <div className="p-4">
                                 <h3 className="font-semibold text-lg">{name}</h3>
                                 <p className="text-indigo-600 font-semibold mt-1">${price.toFixed(2)}</p>
@@ -163,7 +163,7 @@ export default function Home() {
                         >
                             <Link to={`/products/${id}`} className="flex-1">
                                 <img
-                                    src={image || 'images/no-img.png'}
+                                    src={image || '/images/no-img.png'}
                                     alt={name}
                                     className="w-full h-32 object-cover mb-4 rounded"
                                 />

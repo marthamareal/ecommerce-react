@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { addOrUpdateCart, fetchCategories, fetchProducts } from '../services/ProductService';
 
-export default function Products() {
+export default function ProductsList() {
     const [products, setProducts] = useState([])
     const [category, setCategory] = useState("")
     const [categories, setCategories] = useState([])
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    let isAdmin = localStorage.getItem("isAdmin")
+    if (isAdmin === "undefined" || isAdmin === "null") {
+        isAdmin = null;
+    }
 
     const addToCart = async (productId, qty = 1) => {
         // Add to cart with API
@@ -57,41 +61,56 @@ export default function Products() {
         <div className="max-w-7xl mx-auto px-4 py-8">
             {/* Search + Filter */}
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                {/* Search Input */}
                 <input
                     type="text"
                     placeholder="Search products..."
                     className="w-full sm:w-1/2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
-                <div className="flex items-center gap-2 w-full sm:w-1/3">
-                    {/* Icon + Text */}
-                    <div className="flex items-center gap-1 text-gray-700 font-medium whitespace-nowrap">
-                        <svg
-                            className="w-5 h-5 text-indigo-600"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                            viewBox="0 0 24 24"
+
+                {/* Filter + Button in a Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-1/2 justify-end">
+                    {/* Filter Dropdown */}
+                    <div className="flex items-center gap-2 flex-1">
+                        <div className="flex items-center gap-1 text-gray-700 font-medium whitespace-nowrap">
+                            <svg
+                                className="w-5 h-5 text-indigo-600"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 14.414V19a1 1 0 01-.553.894l-4 2A1 1 0 019 21v-6.586L3.293 6.707A1 1 0 013 6V4z"
+                                />
+                            </svg>
+                            Filter by Categories:
+                        </div>
+                        <select
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 14.414V19a1 1 0 01-.553.894l-4 2A1 1 0 019 21v-6.586L3.293 6.707A1 1 0 013 6V4z"
-                            />
-                        </svg>
-                        Filter by Categories:
+                            <option value="">All</option>
+                            {categories.map((category) => (
+                                <option value={category.name} key={category.id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
-                    {/* Dropdown */}
-                    <select
-                        value={category}
-                        onChange={(e) => { setCategory(e.target.value) }}
-                        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                        <option value="" >All</option>
-                        {categories.map((category) => (
-                            <option value={category.name} key={category.id}>{category.name}</option>
-                        ))}
-                    </select>
+                    {/* Button */}
+                    {isAdmin && (
+                        <Link
+                            to="/products/add"
+                            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition whitespace-nowrap"
+                        >
+                            Add Product
+                        </Link>
+                    )}
                 </div>
             </div>
 
@@ -104,7 +123,7 @@ export default function Products() {
                     >
                         <Link to={`/products/${product.id}`} className="flex-1">
                             <img
-                                src={product.image || 'images/no-img.png'}
+                                src={product.image || '/images/no-img.png'}
                                 alt={product.name}
                                 className="w-full h-32 object-cover mb-4 rounded"
                             />

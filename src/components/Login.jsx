@@ -32,8 +32,9 @@ export default function Login() {
                 const res = await result.json();
                 if (!result.ok) setErrors({ general: res.message || "Login failed" })
                 else {
-                    // Save token to localStorage
+                    // Save token  and admin status to localStorage
                     localStorage.setItem("token", res.accessToken);
+                    localStorage.setItem("isAdmin", res.isAdmin);
                     navigate("/");
                 }
             }
