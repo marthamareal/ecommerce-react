@@ -108,7 +108,7 @@ export default function AddProduct() {
                         <label className="block text-gray-700 mb-1">Category</label>
                         <select
                             value={categoryId}
-                            onChange={(e) => { setCategoryId(e.target.value) }}
+                            onChange={(e) => { setCategoryId(parseInt(e.target.value)) }}
                             className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
                             {categories.map((category) => (
