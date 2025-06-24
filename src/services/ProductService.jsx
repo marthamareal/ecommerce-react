@@ -19,6 +19,26 @@ export const fetchCategories = async () => {
     }
 }
 
+
+export const addProduct= async (requestData) => {
+    try {
+        const res = await fetch("http://localhost:5000/api/products", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: "Bearer " + token.trim(),
+            },
+            body: JSON.stringify(requestData)
+        })
+        if (!res.ok) throw new Error("Failed to add product.");
+        return res
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 export const fetchProducts = async () => {
     try {
         const res = await fetch("http://localhost:5000/api/products", {

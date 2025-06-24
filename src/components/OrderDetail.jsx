@@ -76,7 +76,7 @@ export default function OrderDetail() {
                             className="flex items-center gap-4 border-b last:border-b-0 py-3"
                         >
                             <img
-                                src={product.image || 'images/no-img.png'}
+                                src={product.image || '/images/no-img.png'}
                                 alt={product.name}
                                 className="w-16 h-16 object-cover rounded"
                             />

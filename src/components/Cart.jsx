@@ -95,7 +95,7 @@ export default function Cart() {
                                 className="flex flex-col sm:flex-row items-center sm:items-start border rounded-md p-4 gap-4"
                             >
                                 <img
-                                    src={product.image || 'images/no-img.png'}
+                                    src={product.image || '/images/no-img.png'}
                                     alt={product.name}
                                     className="w-32 h-32 sm:w-24 sm:h-24 object-cover rounded"
                                 />
