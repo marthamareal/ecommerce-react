@@ -11,8 +11,9 @@ export default function Cart() {
     useEffect(() => {
         const getAvailableCartItems = async () => {
             try {
-                const data = await fetchCart();
-                setAvailableCartItems(data.items);
+                const result = await fetchCart();
+                const data = await result.json()
+                if (result.status == 200) setAvailableCartItems(data.items);
             }
             catch (err) {
                 console.log(err)

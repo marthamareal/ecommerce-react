@@ -87,8 +87,7 @@ export const fetchCart = async () => {
         })
         if (!res.ok) throw new Error("Failed to fetch Cart.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
