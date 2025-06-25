@@ -33,8 +33,9 @@ export default function Home() {
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const data = await fetchCategories()
-                setCategories(data);
+                const result = await fetchCategories()
+                const data = await result.json();
+                if (result.status == 200) setCategories(data);
             }
             catch (err) {
                 console.log(err)
@@ -47,11 +48,13 @@ export default function Home() {
     useEffect(() => {
         const getFeaturedProducts = async () => {
             try {
-                const data = await fetchProducts()
-                // Filter featured products. NOTE: To be changed when backend implements filter on products route
-                const featuredProducts = data.filter((prod) => prod.featured == true)
-
-                setFeaturedProducts(featuredProducts);
+                const result = await fetchProducts()
+                const data = await result.json();
+                if (result.status == 200) {
+                    // Filter featured products. NOTE: To be changed when backend implements filter on products route
+                    const featuredProducts = data.filter((prod) => prod.featured == true)
+                    setFeaturedProducts(featuredProducts);
+                }
             }
             catch (err) {
                 console.log(err)
@@ -139,22 +142,6 @@ export default function Home() {
             {/* Featured Products */}
             <section className="my-12">
                 <h2 className="text-2xl font-bold mb-6 text-center">Featured Products</h2>
-                {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    {featuredProducts.map(({ id, name, price, image }) => (
-                        <Link
-                            to={`/products/${id}`}
-                            key={id}
-                            className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition"
-                        >
-                            <img src={image || '/images/no-img.png'} alt={name} className="w-full h-48 object-cover" />
-                            <div className="p-4">
-                                <h3 className="font-semibold text-lg">{name}</h3>
-                                <p className="text-indigo-600 font-semibold mt-1">${price.toFixed(2)}</p>
-                            </div>
-                        </Link>
-                        
-                    ))}
-                </div> */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
                     {featuredProducts.map(({ id, name, price, image }) => (
                         <div

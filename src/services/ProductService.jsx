@@ -12,8 +12,7 @@ export const fetchCategories = async () => {
         })
         if (!res.ok) throw new Error("Failed to fetch Categories.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
@@ -51,8 +50,7 @@ export const fetchProducts = async () => {
         })
         if (!res.ok) throw new Error("Failed to fetch products.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
@@ -89,8 +87,7 @@ export const fetchCart = async () => {
         })
         if (!res.ok) throw new Error("Failed to fetch Cart.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
@@ -109,8 +106,7 @@ export const addOrUpdateCart = async (requestData) => {
             body: JSON.stringify(requestData)
         })
         if (!res.ok) throw new Error("Failed to add item to Cart.");
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
@@ -130,8 +126,7 @@ export const removeFromCart = async (requestData) => {
         })
         if (!res.ok) throw new Error("Failed to remove Item.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
@@ -168,8 +163,7 @@ export const fetchOrders = async () => {
         })
         if (!res.ok) throw new Error("Failed to fetch Orders.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
