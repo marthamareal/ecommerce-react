@@ -1,6 +1,8 @@
+const apiUrl = import.meta.env.VITE_API_BASE_URL
+
 export const registerUser = async (body) => {
     try {
-        const res = await fetch("http://localhost:5000/api/users/register", {
+        const res = await fetch(`${apiUrl}/users/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -17,7 +19,7 @@ export const registerUser = async (body) => {
 
 export const loginUser = async (body) => {
     try {
-        const res = await fetch("http://localhost:5000/api/auth/login",
+        const res = await fetch(`${apiUrl}/auth/login`,
             {
                 method: "POST",
                 headers: {
@@ -36,7 +38,7 @@ export const loginUser = async (body) => {
 
 export const forgotPassword = async (body) => {
     try {
-        const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
+        const res = await fetch(`${apiUrl}/auth/forgot-password`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,7 +55,7 @@ export const forgotPassword = async (body) => {
 
 export const resetPassword = async (token, body) => {
     try {
-        const res = await fetch(`http://localhost:5000/api/auth/reset-password/${token}`, {
+        const res = await fetch(`${apiUrl}/auth/reset-password/${token}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
