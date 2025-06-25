@@ -46,8 +46,9 @@ export default function ProductsList() {
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const data = await fetchCategories()
-                setCategories(data);
+                const result = await fetchCategories()
+                const data = await result.json();
+                if (result.status == 200) setCategories(data);
             }
             catch (err) {
                 console.log(err)

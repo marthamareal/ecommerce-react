@@ -20,7 +20,7 @@ export default function Cart() {
             }
         }
         getAvailableCartItems();
-    }, []);
+    }, [availableCartItems]);
 
     useEffect(() => {
         setCartItems(availableCartItems);

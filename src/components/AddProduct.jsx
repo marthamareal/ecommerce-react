@@ -22,8 +22,9 @@ export default function AddProduct() {
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const data = await fetchCategories()
-                setCategories(data);
+                const result = await fetchCategories()
+                const data = await result.json();
+                if (result.status == 200) setCategories(data);
                 // Set default category selection
                 if (categories.length > 0 && !categoryId) {
                     setCategoryId(categories[0].id);

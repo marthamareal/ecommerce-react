@@ -12,8 +12,7 @@ export const fetchCategories = async () => {
         })
         if (!res.ok) throw new Error("Failed to fetch Categories.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
