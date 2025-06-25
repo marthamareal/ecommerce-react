@@ -127,8 +127,7 @@ export const removeFromCart = async (requestData) => {
         })
         if (!res.ok) throw new Error("Failed to remove Item.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
