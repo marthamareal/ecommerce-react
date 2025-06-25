@@ -166,8 +166,7 @@ export const fetchOrders = async () => {
         })
         if (!res.ok) throw new Error("Failed to fetch Orders.");
 
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)

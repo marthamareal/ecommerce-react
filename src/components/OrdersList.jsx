@@ -9,8 +9,9 @@ export default function OrdersList() {
     useEffect(() => {
         const getOrders = async () => {
             try {
-                const data = await fetchOrders()
-                if (data) setOrders(data);
+                const result = await fetchOrders()
+                const data = await result.json();
+                if (result.status == 200) setOrders(data)
             }
             catch (err) {
                 console.log(err)
