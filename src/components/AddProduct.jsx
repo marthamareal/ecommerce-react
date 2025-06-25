@@ -116,6 +116,7 @@ export default function AddProduct() {
                                 <option value={category.id} key={category.id}>{category.name}</option>
                             ))}
                         </select>
+                        {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
                     </div>
 
                     {/* Featured Checkbox */}

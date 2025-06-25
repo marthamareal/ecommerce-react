@@ -8,10 +8,7 @@ export default function ProductsList() {
     const [categories, setCategories] = useState([])
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    let isAdmin = localStorage.getItem("isAdmin")
-    if (isAdmin === "undefined" || isAdmin === "null") {
-        isAdmin = null;
-    }
+    let isAdmin = localStorage.getItem("isAdmin") === "true"
 
     const addToCart = async (productId, qty = 1) => {
         // Add to cart with API
