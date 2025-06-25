@@ -28,12 +28,15 @@ export default function ProductsList() {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const data = await fetchProducts()
-                // Apply filtes: NOTE base them on API after filter is added
-                const filteredProducts = category
-                    ? data.filter((p) => p.category.name === category)
-                    : data;
-                setProducts(filteredProducts);
+                const result = await fetchProducts()
+                const data = await result.json();
+                if (result.status == 200) {
+                    // Apply filtes: NOTE base them on API after filter is added
+                    const filteredProducts = category
+                        ? data.filter((p) => p.category.name === category)
+                        : data;
+                    setProducts(filteredProducts);
+                }
             }
             catch (err) {
                 console.log(err)
