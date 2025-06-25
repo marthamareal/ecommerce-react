@@ -106,8 +106,7 @@ export const addOrUpdateCart = async (requestData) => {
             body: JSON.stringify(requestData)
         })
         if (!res.ok) throw new Error("Failed to add item to Cart.");
-        const data = await res.json();
-        return data
+        return res
     }
     catch (err) {
         console.log(err)
