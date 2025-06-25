@@ -1,8 +1,9 @@
+const apiUrl = import.meta.env.VITE_API_BASE_URL
 const token = localStorage.getItem("token");
 
 export const fetchCategories = async () => {
     try {
-        const res = await fetch("http://localhost:5000/api/products/categories/retrieve", {
+        const res = await fetch(`${apiUrl}/products/categories/retrieve`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -22,7 +23,7 @@ export const fetchCategories = async () => {
 
 export const addProduct= async (requestData) => {
     try {
-        const res = await fetch("http://localhost:5000/api/products", {
+        const res = await fetch(`${apiUrl}/products`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -41,7 +42,7 @@ export const addProduct= async (requestData) => {
 
 export const fetchProducts = async () => {
     try {
-        const res = await fetch("http://localhost:5000/api/products", {
+        const res = await fetch(`${apiUrl}/products`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -60,7 +61,7 @@ export const fetchProducts = async () => {
 
 export const fetchProduct = async (id) => {
     try {
-        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+        const res = await fetch(`${apiUrl}/products/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -78,7 +79,7 @@ export const fetchProduct = async (id) => {
 
 export const fetchCart = async () => {
     try {
-        const res = await fetch("http://localhost:5000/api/products/cart/items", {
+        const res = await fetch(`${apiUrl}/products/cart/items`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -98,7 +99,7 @@ export const fetchCart = async () => {
 
 export const addOrUpdateCart = async (requestData) => {
     try {
-        const res = await fetch("http://localhost:5000/api/products/cart/add", {
+        const res = await fetch(`${apiUrl}/products/cart/add`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -118,7 +119,7 @@ export const addOrUpdateCart = async (requestData) => {
 
 export const removeFromCart = async (requestData) => {
     try {
-        const res = await fetch("http://localhost:5000/api/products/cart/items/remove", {
+        const res = await fetch(`${apiUrl}/products/cart/items/remove`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -139,7 +140,7 @@ export const removeFromCart = async (requestData) => {
 
 export const createOrder = async (id) => {
     try {
-        const res = await fetch("http://localhost:5000/api/products/orders/create", {
+        const res = await fetch(`${apiUrl}/products/orders/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -157,7 +158,7 @@ export const createOrder = async (id) => {
 
 export const fetchOrders = async () => {
     try {
-        const res = await fetch("http://localhost:5000/api/products/orders/retrieve", {
+        const res = await fetch(`${apiUrl}/products/orders/retrieve`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -177,7 +178,7 @@ export const fetchOrders = async () => {
 
 export const fetchOrder = async (id) => {
     try {
-        const res = await fetch(`http://localhost:5000/api/products/orders/${id}`, {
+        const res = await fetch(`${apiUrl}/products/orders/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
