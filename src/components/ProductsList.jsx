@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { addOrUpdateCart, fetchCategories, fetchProducts } from '../services/ProductService';
+import Pagination from './Pagination';
 
 export default function ProductsList() {
     const [products, setProducts] = useState([])
     const [category, setCategory] = useState("")
     const [categories, setCategories] = useState([])
+    const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(1);
     const [error, setError] = useState("");
     const navigate = useNavigate();
     let isAdmin = localStorage.getItem("isAdmin") === "true"
@@ -25,14 +28,16 @@ export default function ProductsList() {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const result = await fetchProducts()
+                const result = await fetchProducts(page, category)
                 const data = await result.json();
                 if (result.status == 200) {
+                    setPage(data.page)
+                    setPages(data.pages)
                     // Apply filtes: NOTE base them on API after filter is added
-                    const filteredProducts = category
-                        ? data.filter((p) => p.category.name === category)
-                        : data;
-                    setProducts(filteredProducts);
+                    // const filteredProducts = category
+                    //     ? data.filter((p) => p.category.name === category)
+                    //     : data;
+                    setProducts(data.data);
                 }
             }
             catch (err) {
@@ -41,7 +46,7 @@ export default function ProductsList() {
             }
         }
         getProducts();
-    }, [category]);
+    }, [category, page]);
 
     useEffect(() => {
         const getCategories = async () => {
@@ -57,6 +62,15 @@ export default function ProductsList() {
         }
         getCategories();
     }, []);
+
+
+    const nextPage = () => {
+        if (page < pages) setPage((prev) => prev + 1);
+    };
+
+    const prevPage = () => {
+        if (page > 1) setPage((prev) => prev - 1);
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
@@ -141,6 +155,9 @@ export default function ProductsList() {
                     </div>
                 ))}
             </div>
+
+            {/* Pagination Controls */}
+            <Pagination page={page} setPage={setPage} pages={pages} />
         </div>
     );
 }
