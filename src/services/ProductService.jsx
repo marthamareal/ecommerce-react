@@ -151,9 +151,9 @@ export const createOrder = async (id) => {
     }
 }
 
-export const fetchOrders = async () => {
+export const fetchOrders = async (page=1) => {
     try {
-        const res = await fetch(`${apiUrl}/products/orders/retrieve`, {
+        const res = await fetch(`${apiUrl}/products/orders/retrieve?page=${page}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

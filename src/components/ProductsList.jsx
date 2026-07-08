@@ -37,7 +37,7 @@ export default function ProductsList() {
                     // const filteredProducts = category
                     //     ? data.filter((p) => p.category.name === category)
                     //     : data;
-                    setProducts(data.data);
+                    setProducts(Array.isArray(data.data) ? data.data : []);
                 }
             }
             catch (err) {

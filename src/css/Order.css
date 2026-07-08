@@ -1,0 +1,46 @@
+.order-card {
+    animation: order-card-in 0.35s ease-out both;
+}
+
+@keyframes order-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.orders-skeleton {
+    position: relative;
+    overflow: hidden;
+}
+
+.orders-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.6),
+            transparent);
+    animation: orders-shimmer 1.4s infinite;
+}
+
+@keyframes orders-shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .order-card,
+    .orders-skeleton::after {
+        animation: none;
+    }
+}
