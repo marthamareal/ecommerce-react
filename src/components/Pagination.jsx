@@ -1,67 +1,116 @@
+import { useMemo } from "react";
+import "../Pagination.css";
 
-import React from 'react';
+/**
+ * Pagination
+ *
+ * Controlled pagination component — the parent owns `currentPage` and
+ * re-fetches /products?page=X whenever `onPageChange` fires.
+ *
+ * Props:
+ *  - currentPage  (number)   1-indexed current page
+ *  - totalPages   (number)   total number of pages available
+ *  - onPageChange (function) called with the new page number
+ *  - siblingCount (number)   how many page numbers to show beside the current one (default 1)
+ */
+export default function Pagination({
+    currentPage,
+    totalPages,
+    onPageChange,
+    siblingCount = 1,
+}) {
+    const pages = useMemo(
+        () => buildPageList(currentPage, totalPages, siblingCount),
+        [currentPage, totalPages, siblingCount]
+    );
 
-export default function Pagination({ page, setPage, pages }) {
-    const getPageNumbers = () => {
-        // if (pages <= 7) {
-        //     // Show all if small number of pages
-        //     return Array.from({ length: pages }, (_, i) => i + 1);
-        // }
+    if (!totalPages || totalPages <= 1) return null;
 
-        // Near the start (show first 5 pages, ellipsis, last)
-        if (pages - page <= 4) {
-            return [1, 2, 3, 4, 5, '...', pages];
-        }
-
-        // Near the end (show first, ellipsis, last 5 pages)
-        if (page >= pages - 3) {
-            return [1, '...', pages - 4, pages - 3, pages - 2, pages - 1, pages];
-        }
-
-        // In the middle (show first, ellipsis, current ±1, ellipsis, last)
-        return [1, '...', page - 1, page, page + 1, '...', pages];
+    const goTo = (page) => {
+        if (page < 1 || page > totalPages || page === currentPage) return;
+        onPageChange(page);
     };
-    const pageItems = getPageNumbers();
 
     return (
-        <div className="mt-6 flex justify-center items-center gap-2 flex-wrap">
-            {/* Prev Button */}
+        <nav className="pagination" aria-label="Product pages">
             <button
-                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                disabled={page === 1}
-                className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:bg-gray-300 disabled:text-gray-500"
+                type="button"
+                className="pagination__btn pagination__btn--nav"
+                onClick={() => goTo(currentPage - 1)}
+                disabled={currentPage === 1}
             >
-                &laquo;
+                Prev
             </button>
 
-            {/* Page Numbers */}
-            {pageItems.map((item, idx) =>
-                item === "..." ? (
-                    <span key={idx} className="px-2 text-gray-500">
-                        ...
-                    </span>
-                ) : (
-                    <button
-                        key={item}
-                        onClick={() => setPage(item)}
-                        className={`px-3 py-1 rounded ${item === page
-                            ? "bg-indigo-800 text-white"
-                            : "bg-white border text-gray-700 hover:bg-indigo-100"
-                            }`}
-                    >
-                        {item}
-                    </button>
-                )
-            )}
+            <ul className="pagination__list">
+                {pages.map((page, idx) =>
+                    page === "…" ? (
+                        <li key={`dots-${idx}`} className="pagination__dots" aria-hidden="true">
+                            …
+                        </li>
+                    ) : (
+                        <li key={page}>
+                            <button
+                                type="button"
+                                className={
+                                    "pagination__btn pagination__btn--num" +
+                                    (page === currentPage ? " is-active" : "")
+                                }
+                                onClick={() => goTo(page)}
+                                aria-current={page === currentPage ? "page" : undefined}
+                            >
+                                {page}
+                            </button>
+                        </li>
+                    )
+                )}
+            </ul>
 
-            {/* Next Button */}
             <button
-                onClick={() => setPage((prev) => Math.min(prev + 1, pages))}
-                disabled={page === pages}
-                className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 disabled:bg-gray-300 disabled:text-gray-500"
+                type="button"
+                className="pagination__btn pagination__btn--nav"
+                onClick={() => goTo(currentPage + 1)}
+                disabled={currentPage === totalPages}
             >
-                &raquo;
+                Next
             </button>
-        </div>
+        </nav>
     );
+}
+
+/**
+ * Builds a page list like: 1 … 4 5 [6] 7 8 … 20
+ * Returns an array of numbers and "…" separators.
+ */
+function buildPageList(current, total, siblingCount) {
+    const totalNumbers = siblingCount * 2 + 5; // first, last, current, 2 dots, siblings
+
+    if (total <= totalNumbers) {
+        return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const leftSibling = Math.max(current - siblingCount, 1);
+    const rightSibling = Math.min(current + siblingCount, total);
+
+    const showLeftDots = leftSibling > 2;
+    const showRightDots = rightSibling < total - 1;
+
+    if (!showLeftDots && showRightDots) {
+        const leftRange = Array.from({ length: 3 + siblingCount * 2 }, (_, i) => i + 1);
+        return [...leftRange, "…", total];
+    }
+
+    if (showLeftDots && !showRightDots) {
+        const rightRange = Array.from(
+            { length: 3 + siblingCount * 2 },
+            (_, i) => total - (3 + siblingCount * 2) + i + 1
+        );
+        return [1, "…", ...rightRange];
+    }
+
+    const middleRange = Array.from(
+        { length: rightSibling - leftSibling + 1 },
+        (_, i) => leftSibling + i
+    );
+    return [1, "…", ...middleRange, "…", total];
 }

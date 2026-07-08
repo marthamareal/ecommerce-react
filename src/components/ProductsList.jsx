@@ -63,15 +63,6 @@ export default function ProductsList() {
         getCategories();
     }, []);
 
-
-    const nextPage = () => {
-        if (page < pages) setPage((prev) => prev + 1);
-    };
-
-    const prevPage = () => {
-        if (page > 1) setPage((prev) => prev - 1);
-    };
-
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
             {/* Search + Filter */}
@@ -157,7 +148,7 @@ export default function ProductsList() {
             </div>
 
             {/* Pagination Controls */}
-            <Pagination page={page} setPage={setPage} pages={pages} />
+            <Pagination currentPage={page} totalPages={pages} onPageChange={setPage} />
         </div>
     );
 }

@@ -41,7 +41,7 @@ export const addProduct= async (requestData) => {
 
 export const fetchProducts = async (page=1, category="") => {
     try {
-        const res = await fetch(`${apiUrl}/products?page=${page}&category=${category}&limit=4`, {
+        const res = await fetch(`${apiUrl}/products?page=${page}&category=${category}&limit=10`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
