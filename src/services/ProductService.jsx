@@ -39,9 +39,14 @@ export const addProduct= async (requestData) => {
     }
 }
 
-export const fetchProducts = async (page=1, category="") => {
+export const fetchProducts = async ({ page = 1, category = "", featured = false, limit = 10 } = {}) => {
     try {
-        const res = await fetch(`${apiUrl}/products?page=${page}&category=${category}&limit=10`, {
+        const params = new URLSearchParams();
+        params.set("page", page);
+        if (category) params.set("category", category);
+        if (featured) params.set("featured", featured);
+        params.set("limit", limit);
+        const res = await fetch(`${apiUrl}/products?${params.toString()}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

@@ -28,7 +28,7 @@ export default function ProductsList() {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const result = await fetchProducts(page, category)
+                const result = await fetchProducts({ page, category })
                 const data = await result.json();
                 if (result.status == 200) {
                     setPage(data.page)
@@ -96,12 +96,15 @@ export default function ProductsList() {
                         </div>
                         <select
                             value={category}
-                            onChange={(e) => setCategory(e.target.value)}
+                            onChange={(e) => {
+                                setCategory(Number(e.target.value)),
+                                setPage(1)
+                            }}
                             className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
                             <option value="">All</option>
                             {categories.map((category) => (
-                                <option value={category.name} key={category.id}>
+                                <option value={category.id} key={category.id}>
                                     {category.name}
                                 </option>
                             ))}

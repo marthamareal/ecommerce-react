@@ -48,13 +48,9 @@ export default function Home() {
     useEffect(() => {
         const getFeaturedProducts = async () => {
             try {
-                const result = await fetchProducts()
+                const result = await fetchProducts({ featured: true, limit: 5 })
                 const data = await result.json();
-                if (result.status == 200) {
-                    // Filter featured products. NOTE: To be changed when backend implements filter on products route
-                    const featuredProducts = data.filter((prod) => prod.featured == true)
-                    setFeaturedProducts(featuredProducts);
-                }
+                if (result.status === 200) setFeaturedProducts(data.data);
             }
             catch (err) {
                 console.log(err)
