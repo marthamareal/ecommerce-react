@@ -1,65 +1,83 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { addOrUpdateCart, fetchCategories, fetchProducts } from '../services/ProductService';
 import Pagination from './Pagination';
 
 export default function ProductsList() {
-    const [products, setProducts] = useState([])
-    const [category, setCategory] = useState("")
-    const [categories, setCategories] = useState([])
-    const [page, setPage] = useState(1);
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [pages, setPages] = useState(1);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    let isAdmin = localStorage.getItem("isAdmin") === "true"
+    const [searchParams, setSearchParams] = useSearchParams();
+    let isAdmin = localStorage.getItem("isAdmin") === "true";
+
+    // URL is the single source of truth for page + category.
+    const page = Number(searchParams.get('page')) || 1;
+    const category = searchParams.get('category') || '';
 
     const addToCart = async (productId, qty = 1) => {
         // Add to cart with API
         try {
-            await addOrUpdateCart({ productId: productId, quantity: qty })
-            navigate("/cart")
+            await addOrUpdateCart({ productId: productId, quantity: qty });
+            navigate("/cart");
         }
         catch (err) {
-            console.log(err)
-            setError(err.message)
+            console.log(err);
+            setError(err.message);
         }
+    };
+
+    // Update category and reset page in a single URL change so the two never
+    // go out of sync (this is what fixed the "stale page on filter change" bug).
+    const handleCategoryChange = (newCategory) => {
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            if (newCategory) next.set('category', newCategory);
+            else next.delete('category');
+            next.set('page', '1');
+            return next;
+        });
+    };
+
+    const handlePageChange = (newPage) => {
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.set('page', String(newPage));
+            return next;
+        });
     };
 
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const result = await fetchProducts({ page, category })
+                const result = await fetchProducts({ page, category });
                 const data = await result.json();
                 if (result.status == 200) {
-                    setPage(data.page)
-                    setPages(data.pages)
-                    // Apply filtes: NOTE base them on API after filter is added
-                    // const filteredProducts = category
-                    //     ? data.filter((p) => p.category.name === category)
-                    //     : data;
+                    setPages(data.pages);
                     setProducts(Array.isArray(data.data) ? data.data : []);
                 }
             }
             catch (err) {
-                console.log(err)
-                setError(err.message)
+                console.log(err);
+                setError(err.message);
             }
-        }
+        };
         getProducts();
     }, [category, page]);
 
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const result = await fetchCategories()
+                const result = await fetchCategories();
                 const data = await result.json();
                 if (result.status == 200) setCategories(data);
             }
             catch (err) {
-                console.log(err)
-                setError(err.message)
+                console.log(err);
+                setError(err.message);
             }
-        }
+        };
         getCategories();
     }, []);
 
@@ -96,16 +114,13 @@ export default function ProductsList() {
                         </div>
                         <select
                             value={category}
-                            onChange={(e) => {
-                                setCategory(Number(e.target.value)),
-                                setPage(1)
-                            }}
+                            onChange={(e) => handleCategoryChange(e.target.value)}
                             className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
                             <option value="">All</option>
-                            {categories.map((category) => (
-                                <option value={category.id} key={category.id}>
-                                    {category.name}
+                            {categories.map((cat) => (
+                                <option value={cat.id} key={cat.id}>
+                                    {cat.name}
                                 </option>
                             ))}
                         </select>
@@ -151,7 +166,7 @@ export default function ProductsList() {
             </div>
 
             {/* Pagination Controls */}
-            <Pagination currentPage={page} totalPages={pages} onPageChange={setPage} />
+            <Pagination currentPage={page} totalPages={pages} onPageChange={handlePageChange} />
         </div>
     );
 }
