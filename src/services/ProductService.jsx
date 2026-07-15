@@ -39,23 +39,40 @@ export const addProduct= async (requestData) => {
     }
 }
 
-export const fetchProducts = async () => {
+export const fetchProducts = async ({
+    page = 1,
+    category = "",
+    search = "",
+    featured = false,
+    minPrice = "",
+    maxPrice = "",
+    limit = 10,
+} = {}) => {
     try {
-        const res = await fetch(`${apiUrl}/products`, {
+        const params = new URLSearchParams();
+        params.set("page", page);
+        if (category) params.set("category", category);
+        if (search) params.set("search", search);
+        if (featured) params.set("featured", featured);
+        if (minPrice) params.set("minPrice", minPrice);
+        if (maxPrice) params.set("maxPrice", maxPrice);
+        params.set("limit", limit);
+
+        const res = await fetch(`${apiUrl}/products?${params.toString()}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
-            }
-        })
+            },
+        });
         if (!res.ok) throw new Error("Failed to fetch products.");
 
-        return res
+        return res;
+    } catch (err) {
+        console.log(err);
+        throw err;
     }
-    catch (err) {
-        console.log(err)
-    }
-}
+};
 
 export const fetchProduct = async (id) => {
     try {
@@ -151,9 +168,9 @@ export const createOrder = async (id) => {
     }
 }
 
-export const fetchOrders = async () => {
+export const fetchOrders = async (page=1) => {
     try {
-        const res = await fetch(`${apiUrl}/products/orders/retrieve`, {
+        const res = await fetch(`${apiUrl}/products/orders/retrieve?page=${page}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

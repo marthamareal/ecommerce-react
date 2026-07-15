@@ -8,6 +8,11 @@ const ProductDetail = () => {
     const [error, setError] = useState("");
     const { id } = useParams();
 
+    let token = localStorage.getItem("token");
+    if (token === "undefined" || token === "null") {
+        token = null;
+    }
+
     const handleQuantityChange = (e) => {
         const value = Math.max(1, Number(e.target.value));
         setQuantity(value);
@@ -70,6 +75,7 @@ const ProductDetail = () => {
                 </p>
                 <p className="text-gray-700 mb-6 text-justify break-words">{product.description}</p>
 
+                {token && (
                 <div className="flex items-center mb-4 gap-4">
                     <label htmlFor="quantity" className="text-gray-700">
                         Quantity:
@@ -81,15 +87,15 @@ const ProductDetail = () => {
                         onChange={handleQuantityChange}
                         className="w-20 border border-gray-300 rounded px-2 py-1 text-center"
                         min="1"
-                    />
+                        />
+                        <button
+                            onClick={handleAddToCart}
+                            className="bg-indigo-600 text-white px-6 py-3 rounded hover:bg-indigo-700 transition font-semibold"
+                        >
+                            Add to Cart
+                        </button>
                 </div>
-
-                <button
-                    onClick={handleAddToCart}
-                    className="bg-indigo-600 text-white px-6 py-3 rounded hover:bg-indigo-700 transition font-semibold"
-                >
-                    Add to Cart
-                </button>
+                )}
             </div>
         </div>
     );

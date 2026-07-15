@@ -29,7 +29,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/orders/:id" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
-        <Route path="/products/:id" element={<PrivateRoute><ProductDetail /></PrivateRoute>} />
+        <Route path="/products/:id" element={<ProductDetail />} />
       </Routes>
     </>
       
