@@ -39,29 +39,40 @@ export const addProduct= async (requestData) => {
     }
 }
 
-export const fetchProducts = async ({ page = 1, category = "", search = "", featured = false, limit = 10 } = {}) => {
+export const fetchProducts = async ({
+    page = 1,
+    category = "",
+    search = "",
+    featured = false,
+    minPrice = "",
+    maxPrice = "",
+    limit = 10,
+} = {}) => {
     try {
         const params = new URLSearchParams();
         params.set("page", page);
         if (category) params.set("category", category);
         if (search) params.set("search", search);
         if (featured) params.set("featured", featured);
+        if (minPrice) params.set("minPrice", minPrice);
+        if (maxPrice) params.set("maxPrice", maxPrice);
         params.set("limit", limit);
+
         const res = await fetch(`${apiUrl}/products?${params.toString()}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
-            }
-        })
+            },
+        });
         if (!res.ok) throw new Error("Failed to fetch products.");
 
-        return res
+        return res;
+    } catch (err) {
+        console.log(err);
+        throw err;
     }
-    catch (err) {
-        console.log(err)
-    }
-}
+};
 
 export const fetchProduct = async (id) => {
     try {
