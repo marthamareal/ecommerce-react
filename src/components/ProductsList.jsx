@@ -12,9 +12,21 @@ export default function ProductsList() {
     const [searchParams, setSearchParams] = useSearchParams();
     let isAdmin = localStorage.getItem("isAdmin") === "true";
 
-    // URL is the single source of truth for page + category.
+    // URL is the single source of truth for page + category + search.
     const page = Number(searchParams.get('page')) || 1;
     const category = searchParams.get('category') || '';
+    const search = searchParams.get('search') || '';
+
+    // Local, immediate-typing state for the search box. Kept separate from
+    // `search` (the URL value) so keystrokes feel instant while the actual
+    // request/URL update is debounced.
+    const [searchInput, setSearchInput] = useState(search);
+
+    // If the URL's search value changes from outside this input (back/forward
+    // navigation, a shared link, etc.), keep the box in sync.
+    useEffect(() => {
+        setSearchInput(search);
+    }, [search]);
 
     const addToCart = async (productId, qty = 1) => {
         // Add to cart with API
@@ -48,10 +60,30 @@ export default function ProductsList() {
         });
     };
 
+    const handleSearchChange = (newSearch) => {
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            if (newSearch) next.set('search', newSearch);
+            else next.delete('search');
+            next.set('page', '1');
+            return next;
+        });
+    };
+
+    // Debounce: only push the URL/API update 400ms after the person stops typing.
+    useEffect(() => {
+        if (searchInput === search) return;
+        const timeout = setTimeout(() => {
+            handleSearchChange(searchInput);
+        }, 400);
+        return () => clearTimeout(timeout);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchInput]);
+
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const result = await fetchProducts({ page, category });
+                const result = await fetchProducts({ page, category, search });
                 const data = await result.json();
                 if (result.status == 200) {
                     setPages(data.pages);
@@ -64,7 +96,7 @@ export default function ProductsList() {
             }
         };
         getProducts();
-    }, [category, page]);
+    }, [category, page, search]);
 
     useEffect(() => {
         const getCategories = async () => {
@@ -88,6 +120,8 @@ export default function ProductsList() {
                 {/* Search Input */}
                 <input
                     type="text"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                     placeholder="Search products..."
                     className="w-full sm:w-1/2 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
