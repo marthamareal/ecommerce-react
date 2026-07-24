@@ -250,7 +250,7 @@ export default function ProductsList() {
                     >
                         <Link to={`/products/${product.id}`} className="flex-1">
                             <img
-                                src={product.image || '/images/no-img.png'}
+                                src={product.images?.[0]?.url || '/images/no-img.png'}
                                 alt={product.name}
                                 className="w-full h-32 object-cover mb-4 rounded"
                             />
